@@ -6,5 +6,7 @@ const express = require('express'),
 
 app.set('view engine', 'ejs');
 app.use(express.static('public'));
-
+app.get('/room/:roomId',(req, res) => {
+  res.render('room', {roomID: roomID})
+})
 server.listen(8080);
