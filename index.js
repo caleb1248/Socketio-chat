@@ -1,12 +1,25 @@
-const express = require('express'),
-	http = require('http'),
-	app = express(),
-	server = http.Server(app),
-	io = require('socket.io')(server);
+const express = require('express');
+const app = express();
+const http = require('http');
+const server = http.createServer(app);
+const { Server } = require("socket.io");
+const io = new Server(server);
+const uuid = require('uuid');
 
-app.set('view engine', 'ejs');
-app.use(express.static('public'));
-app.get('/room/:roomId',(req, res) => {
-  res.render('room', {roomID: roomID})
-})
-server.listen(8080);
+app.get('/', (_req, res) => {
+  res.sendFile(__dirname + '/index.html');
+});
+
+io.on('connection', socket => {
+  console.log('a user connected');
+	socket.on('join', id => {
+		socket.join(id);
+		socket.on('message', message => {
+			io.to(id).emit(message);
+		});
+	})
+});
+
+server.listen(3000, () => {
+  console.log('listening on *:3000');
+});

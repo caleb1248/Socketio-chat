@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>Document</title>
+		<style>
+			body{margin: 0}
+			input { position: absolute; bottom: 0; width: 90%; margin: 0; left: 50%; transform: translateX(-50%); }
+	    input:focus { outline: none; }
+			form{
+				margin: 0;
+				height: 30px;
+				bottom: 0;
+				left: 0;
+				right: 0;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="messages"></div>
+		<form>
+			<input type="text" autocomplete="off">
+			<button>Send</button>
+		</form>
+		<script src="/socket.io/socket.io.js"></script>
+		<script>
+	  	var socket = io('/');
+			socket.on('connect', () => {
+				socket.emit('join', window.location.href.replace("https://Socketio-chat.programmer256.repl.co/",""));
+			})
+			var input = document.querySelector('input');
+			function sendMessage(){
+				if(input.value){
+					socket.send(input.value);
+					input.value = '';
+				}
+			}
+			socket.on('message', msg => alert(msg))
+		</script>
+	</body>
+</html>
